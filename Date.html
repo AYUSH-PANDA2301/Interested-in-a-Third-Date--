@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logic Gate: Sudoku-6</title>
+    <style>
+        :root { --primary: #6366f1; --bg: #0f172a; --cell: #1e293b; }
+        body { background-color: var(--bg); color: #f8fafc; font-family: 'Inter', sans-serif; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; padding: 20px; }
+        .container { background: #1e293b; padding: 30px; border-radius: 16px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); max-width: 400px; width: 100%; text-align: center; }
+        h1 { font-size: 1.25rem; margin-bottom: 20px; color: var(--primary); letter-spacing: 1px; }
+        
+        /* Sudoku Grid */
+        .grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 4px; margin-bottom: 25px; background: #334155; padding: 4px; border-radius: 8px; }
+        .cell { width: 100%; aspect-ratio: 1; background: var(--bg); border: none; text-align: center; font-size: 1.2rem; color: #fff; font-weight: bold; border-radius: 4px; outline: none; }
+        .cell:focus { background: #334155; box-shadow: inset 0 0 0 2px var(--primary); }
+        .cell:disabled { color: var(--primary); background: #161e2e; }
+
+        /* Thick borders for 2x3 blocks */
+        .cell:nth-child(3n) { margin-right: 4px; }
+        .grid .cell:nth-child(n+13):nth-child(-n+18), 
+        .grid .cell:nth-child(n+31):nth-child(-n+36) { margin-bottom: 4px; }
+
+        button { background: var(--primary); color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; transition: 0.2s; }
+        button:hover { background: #4f46e5; transform: translateY(-1px); }
+
+        #reveal { display: none; margin-top: 25px; animation: fadeInUp 0.5s ease-out; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .date-box { border: 2px solid var(--primary); padding: 20px; border-radius: 12px; background: rgba(99, 102, 241, 0.1); }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>PROTOCOL: SUDOKU_6X6</h1>
+    <p style="font-size: 0.85rem; color: #94a3b8; margin-bottom: 20px;">Complete the grid. Row 3 holds the access key.</p>
+    
+    <div class="grid" id="sudokuGrid">
+        <input type="text" class="cell" value="1" disabled>
+        <input type="text" class="cell" maxlength="1">
+        <input type="text" class="cell" maxlength="1">
+        <input type="text" class="cell" maxlength="1">
+        <input type="text" class="cell" value="5" disabled>
+        <input type="text" class="cell" maxlength="1">
+        <input type="text" class="cell" maxlength="1">
+        <input type="text" class="cell" maxlength="1">
+        <input type="text" class="cell" value="6" disabled>
+        <input type="text" class="cell" value="1" disabled>
+        <input type="text" class="cell" maxlength="1">
+        <input type="text" class="cell" maxlength="1">
+        <input type="text" class="cell" id="r3c1" maxlength="1">
+        <input type="text" class="cell" id="r3c2" value="3" disabled>
+        <input type="text" class="cell" id="r3c3" maxlength="1">
+        <input type="text" class="cell" id="r3c4" maxlength="1">
+        <input type="text" class="cell" id="r3c5" maxlength="1">
+        <input type="text" class="cell" id="r3c6" value="4" disabled>
+        <input type="text" class="cell" value="5" disabled>
+        <input type="text" class="cell" maxlength="1">
+        <input type="text" class="cell" maxlength="1">
+        <input type="text" class="cell" maxlength="1" value="2" disabled>
+        <input type="text" class="cell" maxlength="1">
+        <input type="text" class="cell" maxlength="1">
+        <input type="text" class="cell" maxlength="1">
+        <input type="text" class="cell" maxlength="1" value="1" disabled>
+        <input type="text" class="cell" value="2" disabled>
+        <input type="text" class="cell" value="6" disabled>
+        <input type="text" class="cell" maxlength="1">
+        <input type="text" class="cell" maxlength="1">
+        <input type="text" class="cell" maxlength="1">
+        <input type="text" class="cell" maxlength="1">
+        <input type="text" class="cell" maxlength="1">
+        <input type="text" class="cell" maxlength="1">
+        <input type="text" class="cell" value="1" disabled>
+        <input type="text" class="cell" value="2" disabled>
+    </div>
+
+    <button onclick="checkSudoku()">VALIDATE LOGIC</button>
+
+    <div id="reveal">
+        <h2 style="color: #4ade80;">Damn, you are smart!!</h2>
+        <div class="date-box">
+            <p><strong>📍 Location:</strong> Loco Bear, Koramangala</p>
+            <p><strong>⏰ Time:</strong> Sunday @ 6:00 PM</p>
+        </div>
+        <p style="font-size: 0.8rem; color: #64748b; margin-top: 15px;">Target Acquired. See you there?</p>
+    </div>
+</div>
+
+<script>
+    function checkSudoku() {
+        // We only check Row 3 for the unlock key
+        const r3 = [
+            document.getElementById('r3c1').value,
+            "3",
+            document.getElementById('r3c3').value,
+            document.getElementById('r3c4').value,
+            document.getElementById('r3c5').value,
+            "4"
+        ].join('');
+
+        if (r3 === "231564") {
+            document.getElementById('sudokuGrid').style.opacity = '0.3';
+            document.getElementById('sudokuGrid').style.pointerEvents = 'none';
+            document.querySelector('button').style.display = 'none';
+            document.getElementById('reveal').style.display = 'block';
+        } else {
+            alert("CONFLICT DETECTED: Sudoku constraints violated.");
+        }
+    }
+</script>
+
+</body>
+</html>
